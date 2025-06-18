@@ -21,13 +21,17 @@ npm i -g degit
 npx degit x3mka/nx-template-base my-repo
 ```
 
-
 Once you cloned a new repo from this template:
 ```sh
 pnpm install
 ```
 
-## Create new packages
+Then configure git. Add hooks:
+```sh
+pnpm run prepare
+```
+
+## Work with packages
 
 - To create a Node JS library:
 ```sh
@@ -36,21 +40,29 @@ pnpm exec nx g @nx/node:lib common --directory=libs --unitTestRunner=jest --impo
 
 - To create a React app:
 ```sh
+pnpm exec nx add @nx/react
 pnpm exec nx g @nx/react:application frontend --directory=apps --unitTestRunner=jest --linter=eslint --standaloneConfig
 ```
+
+- To delete a package:
+```sh
+pnpm exec nx g @nx/workspace:remove @myorg/common
+```
+
 
 ## Steps to re-create this template
 
 - Create NX workspace:
 ```sh
-pnpm create nx-workspace@latest nx-template-base --preset=ts --packageManager=pnpm --nxCloud=skip --formatter=prettier --appsDir=apps --libsDir=libs
-cd nx-template-base
+pnpm create nx-workspace@latest nx-template-base --preset=ts --packageManager=pnpm --nxCloud=skip --formatter=prettier 
 ```
 
 - Default NX plugins:
 ```sh
 pnpm exec nx add @nx/eslint
 ```
+
+- 
 
 - Install dependencies:
 ```sh
