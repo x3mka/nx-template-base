@@ -67,24 +67,13 @@ pnpm create nx-workspace@latest nx-template-base --preset=ts --packageManager=pn
 pnpm exec nx add @nx/eslint
 ```
 
-- 
-
 - Install dependencies:
 ```sh
 pnpm add -D lint-staged husky commitizen commitlint @commitlint/cli @commitlint/config-conventional
 pnpm add -D @nx/node
 ```
 
-- Adjust .prettierrc to your liking:
-```json
-{
-  "semi": false,
-  "singleQuote": true,
-  "printWidth": 100,
-  "trailingComma": "all"
-}
-```
-
+- Adjust .prettierrc to your liking.
 - Configure Lint Staged (lint-staged.config.js) to your liking.
 - Configure Commit Lint (commitlint.config.js) to your liking.
 - Configure Commitizen, add to package.json:
@@ -112,3 +101,5 @@ If you have permission issues on Windows running hooks, change hook files encodi
 ```sh
 pnpm exec nx g ci-workflow
 ```
+Adjust installed Node, pnpm versions and common logic in the pipeline.
+
