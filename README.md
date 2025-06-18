@@ -9,24 +9,53 @@ Versions:
 Features:
 - Empty NX workspace with TS preset
 - Prettier on pre-commit
-- Commit-Lint on commit
+- Lint Staged on commit
+- GitHub Actions CI pipeline
 
 # How to start using
 
+1. This repository is marked as a template repository. You can click 'Use this template' button on the repo GitHub page.
+2. Use degit:
+```sh
+npm i -g degit
+npx degit x3mka/nx-template-base my-repo
+```
 
+
+Once you cloned a new repo from this template:
+```sh
+pnpm install
+```
+
+## Create new packages
+
+- To create a Node JS library:
+```sh
+pnpm exec nx g @nx/node:lib common --directory=libs --unitTestRunner=jest --importPath=@myorg/common --linter=eslint --standaloneConfig
+```
+
+- To create a React app:
+```sh
+pnpm exec nx g @nx/react:application frontend --directory=apps --unitTestRunner=jest --linter=eslint --standaloneConfig
+```
 
 ## Steps to re-create this template
 
 - Create NX workspace:
 ```sh
-pnpm create nx-workspace@latest nx-template-base --preset=ts --packageManager=pnpm --nxCloud=skip --formatter=prettier
+pnpm create nx-workspace@latest nx-template-base --preset=ts --packageManager=pnpm --nxCloud=skip --formatter=prettier --appsDir=apps --libsDir=libs
 cd nx-template-base
+```
+
+- Default NX plugins:
+```sh
+pnpm exec nx add @nx/eslint
 ```
 
 - Install dependencies:
 ```sh
-pnpm add -D typescript eslint prettier @typescript-eslint/eslint-plugin @typescript-eslint/parser
 pnpm add -D lint-staged husky commitizen commitlint @commitlint/cli @commitlint/config-conventional
+pnpm add -D @nx/node
 ```
 
 - Adjust .prettierrc to your liking:
@@ -39,39 +68,9 @@ pnpm add -D lint-staged husky commitizen commitlint @commitlint/cli @commitlint/
 }
 ```
 
-- Configure ESLint (.eslintrc.base.json) to your liking:
-```json
-{
-  "root": true,
-  "ignorePatterns": ["**/*"],
-  "plugins": ["@typescript-eslint"],
-  "extends": ["plugin:@typescript-eslint/recommended", "prettier"],
-  "parserOptions": {
-    "project": "./tsconfig.base.json"
-  },
-  "rules": {
-    "semi": ["error", "never"],
-    "quotes": ["error", "single"]
-  }
-}
-```
-
-- Configure Lint Staged (lint-staged.config.js) to your liking:
-```js
-export default {
-  '**/*.{ts,tsx,js,jsx}': ['eslint --fix', 'prettier --write'],
-  '**/*.{json,md}': ['prettier --write'],
-}
-```
-
-- Configure Commit Lint (commitlint.config.js) to your liking:
-```js
-module.exports = {
-  extends: ['@commitlint/config-conventional'],
-}
-```
-
-- Configure Commitizen, add to package.json
+- Configure Lint Staged (lint-staged.config.js) to your liking.
+- Configure Commit Lint (commitlint.config.js) to your liking.
+- Configure Commitizen, add to package.json:
 ```json
 {
   "config": {
@@ -82,56 +81,17 @@ module.exports = {
 }
 ```
 
-- Husky and hooks routines
+- Configure Husky and git hooks:
 ```sh
 pnpm exec husky init
 echo "pnpm exec lint-staged" > .husky/pre-commit
 chmod +x .husky/pre-commit   # skip on Windows
-echo "pnpm exec --no -- commitlint --edit \$1" > .husky/commit-msg
+echo "npx --no-install commitlint --edit "$1"" > .husky/commit-msg
 chmod +x .husky/commit-msg   # skip on Windows
 ```
-If you have permission issues on Windows running hooks, change hook files encoding to UTF-8
+If you have permission issues on Windows running hooks, change hook files encoding to UTF-8.
 
-
-
-You can enforce that the TypeScript project references are always in the correct state when running in CI by adding a step to your CI job configuration that runs the following command:
-
+- CI GitHub Action workflow
 ```sh
-npx nx sync:check
+pnpm exec nx g ci-workflow
 ```
-
-[Learn more about nx sync](https://nx.dev/reference/nx-commands#sync)
-
-## Set up CI!
-
-### Step 1
-
-To connect to Nx Cloud, run the following command:
-
-```sh
-npx nx connect
-```
-
-Connecting to Nx Cloud ensures a [fast and scalable CI](https://nx.dev/ci/intro/why-nx-cloud?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) pipeline. It includes features such as:
-
-- [Remote caching](https://nx.dev/ci/features/remote-cache?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task distribution across multiple machines](https://nx.dev/ci/features/distribute-task-execution?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Automated e2e test splitting](https://nx.dev/ci/features/split-e2e-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task flakiness detection and rerunning](https://nx.dev/ci/features/flaky-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-### Step 2
-
-Use the following command to configure a CI workflow for your workspace:
-
-```sh
-npx nx g ci-workflow
-```
-
-[Learn more about Nx on CI](https://nx.dev/ci/intro/ci-with-nx#ready-get-started-with-your-provider?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Install Nx Console
-
-Nx Console is an editor extension that enriches your developer experience. It lets you run tasks, generate code, and improves code autocompletion in your IDE. It is available for VSCode and IntelliJ.
-
-[Install Nx Console &raquo;](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
