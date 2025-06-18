@@ -49,6 +49,11 @@ pnpm exec nx g @nx/react:application frontend --directory=apps --unitTestRunner=
 pnpm exec nx g @nx/workspace:remove @myorg/common
 ```
 
+- To move a package:
+```sh
+# https://nx.dev/reference/core-api/workspace/generators/move
+pnpm exec nx g @nx/workspace:move --project my-feature-lib --destination shared/my-feature-lib
+```
 
 ## Steps to re-create this template
 
